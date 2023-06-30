@@ -78,7 +78,7 @@ namespace ChatGPT.Demo2.Controllers
             // 对输入字符串进行编码，得到编码结果对象
             var tokenizerEncodedResult = tokenizer.Encode(input);
             // 获取单词数量，并返回该值
-            var tokenCount = tokenizerEncodedResult.Tokens.Count();
+            var tokenCount = tokenizerEncodedResult.Tokens.Count;
             return Content($"Token数量为：{tokenCount}");
         }
     }
