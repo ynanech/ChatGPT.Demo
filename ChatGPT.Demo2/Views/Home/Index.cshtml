@@ -1,0 +1,100 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h3>AI对话</h3>
+</div>
+<div class="container">
+    <div id="messagesList" style="min-height:300px;" class="border border-1 p-2"> </div>
+    <div class="input-group mt-3">
+        <textarea type="text" class="form-control" id="messageInput" rows="3" placeholder="请输入聊天内容"></textarea>
+    </div>
+    <div class="input-group mt-3">
+        <input type="button" id="sendButton" value="发送" class="btn btn-primary" />
+        <input type="button" id="stopButton" value="停止响应" class="btn btn-warning" disabled />
+    </div>
+</div>
+
+
+@section Scripts{
+    <script type="text/javascript">
+        //内容显示框
+        var messagesList = document.getElementById("messagesList")
+        //消息输入框
+        var messageInput = document.getElementById("messageInput");
+        //发送按钮
+        var sendButton = document.getElementById("sendButton");
+        //停止响应按钮
+        var stopButton = document.getElementById("stopButton");
+        //停止响应信号
+        var stopRequest = false;
+
+        // 定义一个XMLHttpRequest对象，用于发送请求和接收响应
+        var httpRequest = new XMLHttpRequest();
+
+        //发送按钮绑定click事件
+        sendButton.addEventListener("click", function (event) {
+            var message = messageInput.value;
+            if (message.length == 0) {
+                alert('请输入聊天内容');
+                return;
+            }
+            send(message);
+            event.preventDefault();
+        });
+
+        //停止响应按钮绑定click事件
+        stopButton.addEventListener("click", function (event) {
+            stopRequest = true;
+            event.preventDefault();
+        });
+
+        function send(message) {
+            //修改按钮状态
+            sendButton.disabled = true;
+            stopButton.disabled = false;
+
+            //向内容显示框中追加发送的内容
+            var div = document.createElement("div");
+            div.className = "alert alert-secondary";
+            div.textContent = `Me：${message}`;
+            messageInput.value = '';
+            messagesList.appendChild(div);
+
+            //向内容显示框中追加ChatGpt返回的内容
+            div = document.createElement("div");
+            div.className = "alert alert-primary";
+            messagesList.appendChild(div);
+            div.textContent = "……";
+
+            //创建FormData格式消息
+            var formData = new FormData();
+            formData.set('message', message);
+
+            //监听请求状态
+            httpRequest.onreadystatechange = function () {
+                if (stopRequest) {
+                    httpRequest.abort();
+                    stopRequest = false;
+                }
+            };
+
+            httpRequest.onprogress = function (progressEvent) {
+                //处理响应数据
+                div.textContent = `GPT：${progressEvent.target.responseText}`;
+            };
+            //请求是否成功都会执行
+            httpRequest.onloadend = function (progressEvent) {
+                //恢复按钮状态
+                sendButton.disabled = false;
+                stopButton.disabled = true;
+            };
+
+            //打开请求，设置请求方法和地址，并设置异步为true
+            httpRequest.open("POST", "api/chat", true);
+            httpRequest.responseType = "text";// 设置请求头为text格式
+            httpRequest.send(formData);//发送请求
+        }
+    </script>
+}

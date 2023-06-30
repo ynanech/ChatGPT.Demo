@@ -1,0 +1,11 @@
+﻿################################################################################
+# 此 .gitignore 文件已由 Microsoft(R) Visual Studio 自动创建。
+################################################################################
+
+/.vs
+/ChatGPT.Demo1/bin/Debug/net7.0
+/ChatGPT.Demo1/obj
+/ChatGPT.Demo2/bin/Debug/net7.0
+/ChatGPT.Demo2/obj
+/ChatGPT.Demo3/bin/Debug/net7.0
+/ChatGPT.Demo3/obj

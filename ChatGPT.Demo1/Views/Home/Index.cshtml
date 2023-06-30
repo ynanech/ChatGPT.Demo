@@ -1,0 +1,75 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h3>AI对话</h3>
+</div>
+<div class="container">
+    <div id="messagesList" style="min-height:300px;" class="border border-1 p-2"> </div>
+    <div class="input-group mt-3">
+        <textarea type="text" class="form-control" id="messageInput" rows="3" placeholder="请输入聊天内容"></textarea>
+    </div>
+    <div class="input-group mt-3">
+        <input type="button" id="sendButton" value="发送" class="btn btn-primary" />
+    </div>
+</div>
+
+
+@section Scripts{
+    <script type="text/javascript">
+        //内容显示框
+        var messagesList = document.getElementById("messagesList")
+        //聊天输入框
+        var messageInput = document.getElementById("messageInput");
+        //发送按钮
+        var sendButton = document.getElementById("sendButton");
+
+        // 定义一个XMLHttpRequest对象，用于发送请求和接收响应
+        var httpRequest = new XMLHttpRequest();
+
+        //发送按钮绑定click事件
+        sendButton.addEventListener("click", function (event) {
+            var message = messageInput.value;
+            if (message.length == 0) {
+                alert('请输入聊天内容');
+                return;
+            }
+            send(message);
+            event.preventDefault();
+        });
+
+        function send(message) {
+            //向内容显示框中追加发送的内容
+            var div = document.createElement("div");
+            div.className = "alert alert-secondary";
+            div.textContent = `Me：${message}`;
+            messageInput.value = '';
+            messagesList.appendChild(div);
+
+            //向内容显示框中追加ChatGpt返回的内容
+            div = document.createElement("div");
+            div.className = "alert alert-primary";
+            messagesList.appendChild(div);
+            div.textContent = "……";
+
+            //创建FormData格式消息
+            var formData = new FormData();
+            formData.set('message', message);
+
+            //添加事件监听器
+            httpRequest.onload = function () {
+                //处理响应数据
+                div.textContent = httpRequest.response;
+            };
+            httpRequest.onerror = function () {
+                //请求失败时处理错误
+                console.log("请求失败");
+            };
+
+            //打开请求，设置请求方法和地址，并设置异步为true
+            httpRequest.open("POST", "api/chat", true);
+            httpRequest.send(formData);//发送请求
+        }
+    </script>
+}
