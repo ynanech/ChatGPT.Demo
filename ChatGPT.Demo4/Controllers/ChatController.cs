@@ -4,16 +4,19 @@ using OpenAI.Interfaces;
 using OpenAI.ObjectModels.RequestModels;
 using OpenAI.Tokenizer.GPT3;
 
-namespace ChatGPT.Demo3.Controllers
+namespace ChatGPT.Demo4.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class ChatController : ControllerBase
     {
         private readonly IOpenAIService _openAiService;
-        public ChatController(IOpenAIService openAiService)
+        //private readonly IChatGPTKeyService _chatGPTKeyService;
+
+        public ChatController(IOpenAIService openAiService /* , IChatGPTKeyService chatGPTKeyService*/)
         {
             _openAiService = openAiService;
+            //_chatGPTKeyService = chatGPTKeyService;
         }
 
         [HttpPost]
@@ -22,6 +25,13 @@ namespace ChatGPT.Demo3.Controllers
             int i = 0;
             Response.Headers.Add("Content-Type", "text/event-stream");
             Response.Headers.Add("Cache-Control", "no-cache");
+
+            //string apiKey = await _chatGPTKeyService.GetRandomAsync();
+            //IOpenAIService _openAiService = new OpenAIService(new OpenAiOptions
+            //{
+            //    ApiKey = apiKey
+            //});
+
             var completionResult = _openAiService.ChatCompletion.CreateCompletionAsStream(
                 new ChatCompletionCreateRequest
                 {

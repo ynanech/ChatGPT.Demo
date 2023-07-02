@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatGPT.Demo1", "ChatGPT.De
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatGPT.Demo2", "ChatGPT.Demo2\ChatGPT.Demo2.csproj", "{931E7924-CF8B-4CBE-84D0-9142B5F5B95F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatGPT.Demo3", "ChatGPT.Demo3\ChatGPT.Demo3.csproj", "{8EF790D9-E2E8-4858-BC31-D376F5DC9928}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatGPT.Demo3", "ChatGPT.Demo3\ChatGPT.Demo3.csproj", "{8EF790D9-E2E8-4858-BC31-D376F5DC9928}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatGPT.Demo4", "ChatGPT.Demo4\ChatGPT.Demo4.csproj", "{B52D2705-A59D-4324-8DF4-98D52C76659D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{8EF790D9-E2E8-4858-BC31-D376F5DC9928}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8EF790D9-E2E8-4858-BC31-D376F5DC9928}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8EF790D9-E2E8-4858-BC31-D376F5DC9928}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B52D2705-A59D-4324-8DF4-98D52C76659D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B52D2705-A59D-4324-8DF4-98D52C76659D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B52D2705-A59D-4324-8DF4-98D52C76659D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B52D2705-A59D-4324-8DF4-98D52C76659D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
