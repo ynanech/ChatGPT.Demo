@@ -6,7 +6,13 @@
 
 上网找了有关.Net与 ChatGPT开发的文章，发现很少，因此打算把我开发过程中的一些关键问题和解决方法分享出来，和大家一起学习，正好公众号没想好要发表的内容，就先以这个为主吧，也请大家关注一下。👇
 
-![微信扫一扫](https://github.com/ynanech/ChatGPT.Demo/assets/20282409/575eafbc-4bde-4012-93ad-7559c28cbb8b)
+![640](https://github.com/ynanech/ChatGPT.Demo/assets/20282409/45fba5fd-3e3f-4fda-b69c-61a0304c00b2)
 
 
 【.Net/C#之ChatGPT开发系列】一、开发准备及实现与ChatGPT的初次对话
+
+【.Net/C#之ChatGPT开发系列】二、C#异步流+SSE通信实现ChatGPT流式响应并实现打字机效果
+
+【.Net/C#之ChatGPT开发系列】三、如何利用ChatGPT进行上下文对话并控制Token数量消耗
+
+【.Net/C#之ChatGPT开发系列】四、ChatGPT多KEY动态轮询，自动删除无效KEY
