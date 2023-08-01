@@ -69,37 +69,36 @@ namespace ChatGPT.Demo6.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet(nameof(InitAsync))]
-        public async Task<string> InitAsync()
-        {
-            var inputAsList = new List<string> { "我喜欢吃苹果", "我讨厌吃香蕉", "我爱吃瓜", "我喜欢喝茶", "我不爱喝咖啡", "我讨厌喝饮料", "我爱喝酒" };
-            var embeddingResult = await _openAIService.Embeddings.CreateEmbedding(new EmbeddingCreateRequest()
-            {
-                InputAsList = inputAsList,
-                Model = OpenAI.ObjectModels.Models.TextSearchAdaDocV1
-            });
+public async Task<string> InitAsync()
+{
+    var inputAsList = new List<string> { "我喜欢吃苹果", "我讨厌吃香蕉", "我爱吃瓜", "我喜欢喝茶", "我不爱喝咖啡", "我讨厌喝饮料", "我爱喝酒" };
+    var embeddingResult = await _openAIService.Embeddings.CreateEmbedding(new EmbeddingCreateRequest()
+    {
+        InputAsList = inputAsList,
+        Model = OpenAI.ObjectModels.Models.TextSearchAdaDocV1
+    });
 
-            if (!embeddingResult.Successful) return $"{embeddingResult.Error.Code}: {embeddingResult.Error.Message}";
+    if (!embeddingResult.Successful) return $"{embeddingResult.Error.Code}: {embeddingResult.Error.Message}";
 
-            try
-            {
-                await _redisVectorSearchService.InfoAsync(_indexName).ConfigureAwait(false);
-                await _redisVectorSearchService.DropIndexAsync(_indexName);
-            }
-            catch (RedisServerException ex) when (ex.Message == "Unknown Index name")
-            {
-                //索引不存在
-            }
+    try
+    {
+        await _redisVectorSearchService.InfoAsync(_indexName).ConfigureAwait(false);
+        await _redisVectorSearchService.DropIndexAsync(_indexName);
+    }
+    catch (RedisServerException ex) when (ex.Message == "Unknown Index name")
+    {
+        //索引不存在
+    }
 
-            await _redisVectorSearchService.CreateIndexAsync(_indexName, _indexPrefix, 1024);
+    await _redisVectorSearchService.CreateIndexAsync(_indexName, _indexPrefix, 1024);
 
-            int i = 0;
-            foreach (var item in inputAsList)
-            {
-                await _redisVectorSearchService.SetAsync(_indexPrefix, i.ToString(), item, embeddingResult.Data[i].Embedding.Select(m => Convert.ToSingle(m)).ToArray());
-                ++i;
-            }
-            return "初始化成功";
-        }
-
+    int i = 0;
+    foreach (var item in inputAsList)
+    {
+        await _redisVectorSearchService.SetAsync(_indexPrefix, i.ToString(), item, embeddingResult.Data[i].Embedding.Select(m => Convert.ToSingle(m)).ToArray());
+        ++i;
+    }
+    return "初始化成功";
+}
     }
 }
