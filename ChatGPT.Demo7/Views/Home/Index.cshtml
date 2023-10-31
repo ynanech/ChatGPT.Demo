@@ -1,0 +1,244 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h3>AI对话</h3>
+</div>
+<div class="container">
+    <div id="messagesList" style="min-height:300px;" class="border border-1 p-2"> </div>
+    <div class="input-group mt-3">
+        <textarea type="text" class="form-control" id="messageInput" rows="3" placeholder="请输入聊天内容"></textarea>
+    </div>
+
+    <div class="input-group mt-3">
+        <input type="button" id="sendButton" value="创建图片" class="btn btn-primary" />
+        <input type="button" id="sendEditButton" value="编辑图片" class="btn btn-primary" />
+        <input type="button" id="sendVariationButton" value="图片变体" class="btn btn-primary" />
+        <input type="file" id="inputFile" class="d-none" />
+        <input type="file" id="inputVariationFile" class="d-none" />
+    </div>
+</div>
+
+
+@section Scripts{
+    <script type="text/javascript">
+        //内容显示框
+        var messagesList = document.getElementById("messagesList")
+        //聊天输入框
+        var messageInput = document.getElementById("messageInput");
+        //创建图片按钮
+        var sendButton = document.getElementById("sendButton");
+
+
+        //编辑文件上传
+        var inputFile = document.getElementById("inputFile");
+        //编辑图片按钮
+        var sendEditButton = document.getElementById("sendEditButton");
+
+        //变体文件上传
+        var inputVariationFile = document.getElementById("inputVariationFile");
+        //图片变体按钮
+        var sendVariationButton = document.getElementById("sendVariationButton");
+
+        // 定义一个XMLHttpRequest对象，用于发送请求和接收响应
+        var httpRequest = new XMLHttpRequest();
+
+        //创建图片按钮绑定click事件
+        sendButton.addEventListener("click", function (event) {
+            var message = messageInput.value;
+            if (message.length == 0) {
+                alert('请输入图片描述内容');
+                return;
+            }
+            send(message);
+            event.preventDefault();
+        });
+
+        //编辑图片按钮绑定click事件
+        sendEditButton.addEventListener("click", function (event) {
+            var message = messageInput.value;
+            if (message.length == 0) {
+                alert('请输入图片描述内容');
+                return;
+            }
+
+            inputFile.click();
+            event.preventDefault();
+        });
+
+        //图片变体按钮绑定click事件
+        sendVariationButton.addEventListener("click", function (event) {
+            inputVariationFile.click();
+            event.preventDefault();
+        });
+
+        inputFile.addEventListener("change", function (event) {
+            var message = messageInput.value;
+            var file = inputFile.files[0];
+            sendFile(message, file);
+            event.preventDefault();
+        });
+
+        inputVariationFile.addEventListener("change", function (event) {
+            var file = inputVariationFile.files[0];
+            sendVariationFile(file);
+            event.preventDefault();
+        });
+
+        function send(message) {
+            //向内容显示框中追加发送的内容
+            var div = document.createElement("div");
+            div.className = "alert alert-secondary";
+            div.textContent = `Me：${message}`;
+            messageInput.value = '';
+            messagesList.appendChild(div);
+
+            //向内容显示框中追加ChatGpt返回的内容
+            div = document.createElement("div");
+            div.className = "alert alert-primary";
+            messagesList.appendChild(div);
+            div.textContent = "……";
+
+            //创建FormData格式消息
+            var formData = new FormData();
+            formData.set('message', message);
+
+            //添加事件监听器
+            httpRequest.onload = function () {
+                //处理响应数据
+
+                if (httpRequest.response.startsWith('http')) {
+                    var img = new Image();
+                    img.className = 'img-thumbnail'
+                    img.src = httpRequest.response;
+                    div.textContent = "GPT：";
+                    div.appendChild(img);
+                } else
+                    div.textContent = httpRequest.response;
+            };
+            httpRequest.onerror = function () {
+                //请求失败时处理错误
+                console.log("请求失败");
+            };
+
+            //打开请求，设置请求方法和地址，并设置异步为true
+            httpRequest.open("POST", "api/image/create", true);
+            httpRequest.send(formData);//发送请求
+        }
+
+        function sendFile(message, file) {
+            //向内容显示框中追加发送的内容
+            var me = document.createElement("div");
+            me.className = "alert alert-secondary";
+            me.textContent = `Me：${message}`;
+            messageInput.value = '';
+            messagesList.appendChild(me);
+
+            //预览编辑图片
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                var img = new Image();
+                img.className = 'img-thumbnail'
+                img.src = e.target.result;
+                var container = document.createElement("div");
+                container.appendChild(img);
+                me.appendChild(container);
+            };
+            // 设置以什么方式读取文件，这里以base64方式
+            reader.readAsDataURL(file);
+
+
+            //向内容显示框中追加ChatGpt返回的内容
+            var gpt = document.createElement("div");
+            gpt.className = "alert alert-primary";
+            messagesList.appendChild(gpt);
+            gpt.textContent = "……";
+
+            //创建FormData格式消息
+            var formData = new FormData();
+            formData.set('message', message);
+            formData.set('file', file);
+
+            //添加事件监听器
+            httpRequest.onload = function () {
+                //处理响应数据
+
+                if (httpRequest.response.startsWith('http')) {
+                    //显示图片
+                    var img = new Image();
+                    img.className = 'img-thumbnail'
+                    img.src = httpRequest.response;
+                    gpt.textContent = "GPT：";
+                    gpt.appendChild(img);
+                } else
+                    gpt.textContent = httpRequest.response;
+            };
+            httpRequest.onerror = function () {
+                //请求失败时处理错误
+                console.log("请求失败");
+            };
+
+            //打开请求，设置请求方法和地址，并设置异步为true
+            httpRequest.open("POST", "api/image/edit", true);
+            httpRequest.send(formData);//发送请求
+        }
+
+        function sendVariationFile(file) {
+            //向内容显示框中追加发送的内容
+            var me = document.createElement("div");
+            me.className = "alert alert-secondary";
+            me.textContent = `Me：`;
+            // messageInput.value = '';
+            messagesList.appendChild(me);
+
+            //预览编辑图片
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                var img = new Image();
+                img.className = 'img-thumbnail'
+                img.src = e.target.result;
+                var container = document.createElement("div");
+                container.appendChild(img);
+                me.appendChild(container);
+            };
+            // 设置以什么方式读取文件，这里以base64方式
+            reader.readAsDataURL(file);
+
+
+            //向内容显示框中追加ChatGpt返回的内容
+            var gpt = document.createElement("div");
+            gpt.className = "alert alert-primary";
+            messagesList.appendChild(gpt);
+            gpt.textContent = "……";
+
+            //创建FormData格式消息
+            var formData = new FormData();
+            formData.set('file', file);
+
+            //添加事件监听器
+            httpRequest.onload = function () {
+                //处理响应数据
+
+                if (httpRequest.response.startsWith('http')) {
+                    //显示图片
+                    var img = new Image();
+                    img.className = 'img-thumbnail'
+                    img.src = httpRequest.response;
+                    gpt.textContent = "GPT：";
+                    gpt.appendChild(img);
+                } else
+                    gpt.textContent = httpRequest.response;
+            };
+            httpRequest.onerror = function () {
+                //请求失败时处理错误
+                console.log("请求失败");
+            };
+
+            //打开请求，设置请求方法和地址，并设置异步为true
+            httpRequest.open("POST", "api/image/variation", true);
+            httpRequest.send(formData);//发送请求
+        }
+
+    </script>
+}
