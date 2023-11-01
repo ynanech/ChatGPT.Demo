@@ -16,3 +16,5 @@
 【.Net/C#之ChatGPT开发系列】三、如何利用ChatGPT进行上下文对话并控制Token数量消耗
 
 【.Net/C#之ChatGPT开发系列】四、ChatGPT多KEY动态轮询，自动删除无效KEY
+
+【.Net/C#之ChatGPT开发系列】五、如何用ChatGPT的Function calling调用本地函数实现预约挂号
