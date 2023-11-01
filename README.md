@@ -18,3 +18,7 @@
 【.Net/C#之ChatGPT开发系列】四、ChatGPT多KEY动态轮询，自动删除无效KEY
 
 【.Net/C#之ChatGPT开发系列】五、如何用ChatGPT的Function calling调用本地函数实现预约挂号
+
+【.Net/C#之ChatGPT开发系列】六、ChatGPT Embeddings与Redis强强结合实现文本相似度分析与搜索
+
+【.Net/C#之ChatGPT开发系列】七、手动接入OpenAI绘图模型DALL·E 3，上手体验ChatGPT之AI绘图
